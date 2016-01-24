@@ -3,7 +3,7 @@ import urllib.parse
 
 from tornado.httpclient import AsyncHTTPClient
 
-from conf.settings import log, WECHAT_CFG
+from conf.settings import log, WECHAT_CFG, db_file
 
 
 class Wechat:
@@ -14,8 +14,8 @@ class Wechat:
         # await self._get_user_list()
 
         # {'openid': ['o3G9Ds5wc_j1TjSm_4ATvK86aCkI', 'o3G9Ds0FIEkBQaATmQM682dMel30']}
-        openid = 'o3G9Ds5wc_j1TjSm_4ATvK86aCkI'
-        user_info = await self._get_user_info(openid)
+        # openid = 'o3G9Ds5wc_j1TjSm_4ATvK86aCkI'
+        # user_info = await self._get_user_info(openid)
         return 'hello'
 
     # 获取access token
@@ -28,7 +28,7 @@ class Wechat:
         }
 
         access_token = ''
-        with open("./db/db.txt", mode="r", encoding="UTF-8") as f:
+        with open(db_file['access_token'], mode="w+", encoding="UTF-8") as f:
             access_token = f.readline()
             f.close()
 
@@ -47,7 +47,7 @@ class Wechat:
                 raise
             else:  # success:{'expires_in': 7200, 'access_token': '_2-uahStyx6HWxkBH-euhmTR_nx7Xx7d-rX44MpViwN0gDILqpN7yNm-ZaWn0pC2ufP7B1jQX3DC2Mn0zK9N6pQic9jKvqPfgzJGLKa2U1oKSBcACATBK'}
                 access_token = result['access_token']
-                with open("./db/db.txt", mode="w", encoding="UTF-8") as f:
+                with open(db_file['access_token'], mode="w+", encoding="UTF-8") as f:
                     f.write(access_token)
                     f.close()
                 return access_token
@@ -206,7 +206,8 @@ class Wechat:
         access_token = await self._get_access_token()
         api_url = 'https://api.weixin.qq.com/customservice/kfaccount/add?access_token=' + access_token
         parameters = {
-            'kf_account': 'hello@gh_de1d507e15d1',  # 完整客服账号，格式为：账号前缀@公众号微信号
+            # 'kf_account': 'hello@gh_de1d507e15d1',  # 完整客服账号，格式为：账号前缀@公众号微信号
+            'kf_account': 'z_guilin@公众号微信号',  # 完整客服账号，格式为：账号前缀@公众号微信号
             'nickname': 'hello',
             'password': 'pswmd5',
         }

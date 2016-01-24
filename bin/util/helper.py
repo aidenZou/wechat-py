@@ -7,7 +7,7 @@ import os
 import random
 import struct
 import time
-import pymongo
+# import pymongo
 # from conf.settings import BASE36_NUMERALS, BASE62_NUMERALS, MONGO_UTIL
 # from util.mongotool import MongoProxy
 
