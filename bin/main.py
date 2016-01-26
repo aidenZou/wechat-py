@@ -1,5 +1,5 @@
+import os
 import urllib.parse
-
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
@@ -7,7 +7,7 @@ from tornado.options import define, options
 from tornado.web import Application
 
 from bin.api import *
-from conf.settings import WECHAT_CFG
+from conf.settings import ROOT_PATH, WECHAT_CFG
 
 define("port", default=8000, help="run on the given port", type=int)
 define('debug', default=False, help='debug mode', type=bool)
@@ -33,8 +33,9 @@ class IndexHandler(tornado.web.RequestHandler):
                       + '&state=aidenZou'
                 return self.redirect(url)
 
-        greeting = self.get_argument('greeting', 'Hello')
-        self.write(greeting + ', friendly user!')
+        # greeting = self.get_argument('greeting', 'Hello')
+        # self.write(greeting + ', friendly user!')
+        self.render('index.html')
 
 
 class RouterWeb(Application):
@@ -53,8 +54,13 @@ class RouterWeb(Application):
         ]
 
         settings = dict(
-            debug=options.debug
+                debug=options.debug,
+
+                template_path=os.path.join(ROOT_PATH, 'web/dist/template'),
+                static_path=os.path.join(ROOT_PATH, 'web/dist/static') if options.debug else os.path.join(
+                        os.path.dirname(ROOT_PATH), 'web/dist/static'),
         )
+        print(settings)
         super(RouterWeb, self).__init__(handlers, **settings)
 
 

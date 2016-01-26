@@ -15,6 +15,10 @@ from bin.util.logger import initlog
 
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+db_file = {
+    'access_token': '%s/db/db.txt' % ROOT_PATH,
+}
+
 log = initlog({
     'INFO': '%s/log/wechat-web.info.log' % ROOT_PATH,
     'NOTE': '%s/log/wechat-web.note.log' % ROOT_PATH,

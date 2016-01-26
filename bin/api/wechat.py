@@ -11,6 +11,7 @@ class UserHandler(RequestHandler):
     async def get(self):
         try:
             id = int(self.get_argument('id'))
+            # 利刚 我
             openid_list = ['o3G9Ds5wc_j1TjSm_4ATvK86aCkI', 'o3G9Ds0FIEkBQaATmQM682dMel30']
             openid = openid_list[id]
         except Exception as e:
