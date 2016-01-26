@@ -44,8 +44,12 @@ class RouterWeb(Application):
 
             # 微信API
             (r'/api/wechat_user', wechat.UserHandler),  # 用户
+            (r'/api/wechat_user_list', wechat.UserListHandler),  # 用户列表
             (r'/api/wechat_menu', wechat.MenuHandler),  # 菜单
             (r'/api/wechat_kf', wechat.KfHandler),  # 客服
+            (r'/api/wechat_template_message_send', wechat.TemplateMessageHandler),  # 客服
+
+            (r'/api/test', test.TestHandler),  # Test
         ]
 
         settings = dict(

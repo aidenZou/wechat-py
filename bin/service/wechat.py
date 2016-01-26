@@ -1,8 +1,6 @@
 import json
 import urllib.parse
-
 from tornado.httpclient import AsyncHTTPClient
-
 from conf.settings import log, WECHAT_CFG
 
 
@@ -17,6 +15,7 @@ class Wechat:
         openid = 'o3G9Ds5wc_j1TjSm_4ATvK86aCkI'
         user_info = await self._get_user_info(openid)
         return 'hello'
+
 
     # 获取access token
     async def _get_access_token(self):
@@ -58,6 +57,7 @@ class Wechat:
             # return self.write(error(ErrorCode.REQERR, '请求openid出错'))
             raise
 
+
     # 获取用户列表
     # http://mp.weixin.qq.com/wiki/12/54773ff6da7b8bdc95b7d2667d84b1d4.html
     async def _get_user_list(self):
@@ -75,12 +75,23 @@ class Wechat:
 
             log.info(result)
 
+            print(result)
+
             if 'errcode' in result:  # error:{'errmsg': 'appid missing hint: [7Zuvya0541vr20]', 'errcode': 41002}
                 log.error(result)
                 raise
             else:  # success:{'expires_in': 7200, 'access_token': '_2-uahStyx6HWxkBH-euhmTR_nx7Xx7d-rX44MpViwN0gDILqpN7yNm-ZaWn0pC2ufP7B1jQX3DC2Mn0zK9N6pQic9jKvqPfgzJGLKa2U1oKSBcACATBK'}
                 # 'data': {'openid': ['o3G9Ds5wc_j1TjSm_4ATvK86aCkI', 'o3G9Ds0FIEkBQaATmQM682dMel30']}
-                pass
+
+                if result['count']:
+                    for openid in result['data']['openid']:
+                        print(openid)
+                        # user = await self._get_user_info(openid)
+                        # log.info('%s' % user)
+                        # log.info('%s' % user.encode())
+                        # print('%s' % user)
+
+                return result
 
         except Exception as e:
             log.error(e)
@@ -211,6 +222,29 @@ class Wechat:
             'password': 'pswmd5',
         }
         body = json.dumps(parameters, ensure_ascii=False).encode(encoding='utf-8')
+
+        try:
+            client = AsyncHTTPClient()
+            response = await client.fetch(api_url, method='POST', body=body)
+            result = response.body.decode()
+            print(result)
+
+            log.info('%s' % result.encode())
+
+            return result
+
+        except Exception as e:
+            log.error(e)
+            # return self.write(error(ErrorCode.REQERR, '获取用户基本信息(UnionID机制) error'))
+            raise
+
+    # 模板消息接口
+    # http://mp.weixin.qq.com/wiki/17/304c1885ea66dbedf7dc170d84999a9d.html
+    # 发送模板消息
+    async def _template_message_send(self, openid, args):
+        access_token = await self._get_access_token()
+        api_url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' + access_token
+        body = json.dumps(args, ensure_ascii=False).encode(encoding='utf-8')
 
         try:
             client = AsyncHTTPClient()

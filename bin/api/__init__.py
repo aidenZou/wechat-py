@@ -1,1 +1,1 @@
-__all__ = ['wechat']
+__all__ = ['wechat', 'test']
